@@ -4,8 +4,6 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,6 +17,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLDeleteAll;
 import org.hibernate.annotations.Where;
+import org.hibernate.validator.constraints.Range;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -33,7 +32,7 @@ import com.corkili.husky.common.State;
 @Where(clause = "state != " + State.DELETED)
 @Getter
 @Setter
-@ToString(callSuper = true)
+@ToString
 public class UserPO {
 
     @Id
@@ -52,6 +51,7 @@ public class UserPO {
     private Date updateTime;
 
     @Column(name = "state", nullable = false)
+    @Range(min = State.INIT, max = State.DELETED)
     @NotNull
     private int state;
 
