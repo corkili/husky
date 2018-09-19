@@ -17,6 +17,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLDeleteAll;
 import org.hibernate.annotations.Where;
+import org.hibernate.annotations.WhereJoinTable;
 import org.hibernate.validator.constraints.Range;
 
 import lombok.Getter;
@@ -30,6 +31,7 @@ import com.corkili.husky.common.State;
 @SQLDelete(sql = "update t_user set state = " + State.DELETED + " where id = ?")
 @SQLDeleteAll(sql = "update t_user set state = " + State.DELETED + " where id = ?")
 @Where(clause = "state != " + State.DELETED)
+@WhereJoinTable(clause = "state != " + State.DELETED)
 @Getter
 @Setter
 @ToString
@@ -60,7 +62,7 @@ public class UserPO {
     @Size(min = 1, max = 50)
     private String username;
 
-    @Column(name = "password", unique = true, nullable = false, length = 128)
+    @Column(name = "password", nullable = false, length = 128)
     @NotBlank
     @Size(min = 6, max = 128)
     private String password;
