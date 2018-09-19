@@ -32,6 +32,7 @@
         <module>husky-entity</module>
         <module>husky-common</module>
         <module>husky-dist</module>
+        <module>husky-test</module>
     </modules>
 
     <properties>
