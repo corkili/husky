@@ -15,6 +15,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -40,7 +41,7 @@ import com.corkili.husky.user.UserPO;
 @Getter
 @Setter
 @ToString
-public class Email {
+public class EmailPO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -66,6 +67,14 @@ public class Email {
     @javax.validation.constraints.Email
     @NotBlank
     private String emailAddress;
+
+    @Column(name = "auth_code", nullable = false, length = 128)
+    @Size(max = 128)
+    @NotNull
+    private String authCode;
+
+    @Column(name = "accessible", nullable = false)
+    private boolean accessible;
 
     @ManyToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "user_id")
