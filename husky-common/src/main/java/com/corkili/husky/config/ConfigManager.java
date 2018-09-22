@@ -51,22 +51,24 @@ public final class ConfigManager {
                 return registerConfigFile(filename, configType);
             }
         }
-        return new Result<>(false, IUtils.format("Type of File \"{}\" is not supported", filename), null);
+        return new Result<>(false, MessageCode.FILE_TYPE_NOT_SUPPORTED,
+                IUtils.format("Type of File \"{}\" is not supported", filename), null);
     }
 
     public Result<Void> registerConfigFile(String filename, ConfigType configType) {
         if (CheckUtils.hasNull(filename, configType)) {
-            return new Result<>(false, "invalid arguments: arguments is null", null);
+            return new Result<>(false, MessageCode.INVALID_ARGUMENT,
+                    "invalid arguments: arguments is null", null);
         }
         URL url = this.getClass().getClassLoader().getResource(filename);
         if (url == null) {
-            return new Result<>(false,
+            return new Result<>(false, MessageCode.FILE_NOT_EXIST,
                     IUtils.format("File \"{}\" not found", filename), null);
         }
         fileTypeMap.put(filename, configType);
         fileLastModifiedTimeMap.put(filename, Long.MIN_VALUE);
         updateConfig();
-        return new Result<>(true,
+        return new Result<>(true, MessageCode.SUCCESS,
                 IUtils.format("File \"{}\" register successfully", filename), null);
     }
 
@@ -113,7 +115,7 @@ public final class ConfigManager {
         Query query = new Query();
         query.add("filename", filename);
         Result<Map<String, String>> result = ConfigLoaderFactory.getConfigLoader(configType).load(query);
-        return result.isSuccess() ? result.getExtra() : new HashMap<>();
+        return result.success() ? result.data() : new HashMap<>();
     }
 
 }

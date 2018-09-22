@@ -9,6 +9,7 @@ import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
 
 import com.corkili.husky.common.Result;
+import com.corkili.husky.config.MessageCode;
 import com.corkili.husky.util.IUtils;
 
 public final class XmlConfigLoader extends AbstractConfigLoader {
@@ -38,9 +39,9 @@ public final class XmlConfigLoader extends AbstractConfigLoader {
                     .xml(this.getClass().getClassLoader().getResource(filename));
             Map<String, String> config = new HashMap<>();
             configuration.getKeys().forEachRemaining(key -> config.put(key, configuration.getString(key)));
-            return new Result<>(false, "success", config);
+            return new Result<>(true, MessageCode.SUCCESS, "success", config);
         } catch (Exception e) {
-            return new Result<>(false, IUtils.stringifyError(e), null);
+            return new Result<>(false, MessageCode.SYSTEM_INTERNAL_ERROR, IUtils.stringifyError(e), null);
         }
     }
 }

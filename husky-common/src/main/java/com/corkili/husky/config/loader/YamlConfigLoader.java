@@ -7,6 +7,7 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 
 import com.corkili.husky.common.Result;
+import com.corkili.husky.config.MessageCode;
 import com.corkili.husky.util.IUtils;
 
 public final class YamlConfigLoader extends AbstractConfigLoader {
@@ -35,9 +36,9 @@ public final class YamlConfigLoader extends AbstractConfigLoader {
             Map<String, Object> yamlMap = yaml.load(this.getClass().getClassLoader().getResourceAsStream(filename));
             Map<String, String> config = new HashMap<>();
             yamlMap.forEach((key, value) -> config.put(key, value.toString()));
-            return new Result<>(false, "success", config);
+            return new Result<>(true, MessageCode.SUCCESS, "success", config);
         } catch (Exception e) {
-            return new Result<>(false, IUtils.stringifyError(e), null);
+            return new Result<>(false, MessageCode.SYSTEM_INTERNAL_ERROR, IUtils.stringifyError(e), null);
         }
     }
 }
