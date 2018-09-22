@@ -115,7 +115,7 @@ public final class ConfigManager {
         Query query = new Query();
         query.add("filename", filename);
         Result<Map<String, String>> result = ConfigLoaderFactory.getConfigLoader(configType).load(query);
-        return result.isSuccess() ? result.getExtra() : new HashMap<>();
+        return result.success() ? result.data() : new HashMap<>();
     }
 
 }
