@@ -2,12 +2,10 @@ package com.corkili.husky.test.user;
 
 import java.util.Date;
 
-import javax.jws.soap.SOAPBinding.Use;
-
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.corkili.husky.common.State;
+import com.corkili.husky.common.Constants;
 import com.corkili.husky.test.HuskyTest;
 import com.corkili.husky.user.UserPO;
 import com.corkili.husky.user.UserRepository;
@@ -24,7 +22,7 @@ public class UserTest extends HuskyTest {
         userPO.setPassword("passkey");
         userPO.setCreateTime(new Date());
         userPO.setUpdateTime(new Date());
-        userPO.setState(State.ACTIVE);
+        userPO.setState(Constants.EXISTED);
         userPO = userRepository.save(userPO);
         System.out.println(userPO);
     }

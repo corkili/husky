@@ -1,44 +1,41 @@
-package com.corkili.husky.finance;
+package com.corkili.husky.image;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLDeleteAll;
 import org.hibernate.annotations.Where;
+import org.hibernate.annotations.WhereJoinTable;
+import org.hibernate.validator.constraints.Range;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import com.corkili.husky.common.State;
-import com.corkili.husky.user.UserPO;
+import com.corkili.husky.common.Constants;
 
 @Entity
-@Table(name = "t_account_item")
-@SQLDelete(sql = "update t_account_item set state = " + State.DELETED + " where id = ?")
-@SQLDeleteAll(sql = "update t_account_item set state = " + State.DELETED + " where id = ?")
-@Where(clause = "state != " + State.DELETED)
+@Table(name = "t_image")
+@SQLDelete(sql = "update t_image set deleted = " + Constants.DELETED + " where id = ?")
+@SQLDeleteAll(sql = "update t_image set deleted = " + Constants.DELETED + " where id = ?")
+@Where(clause = "deleted != " + Constants.DELETED)
+@WhereJoinTable(clause = "deleted != " + Constants.DELETED)
 @Getter
 @Setter
-@ToString(callSuper = true)
-public class AccountItemPO {
+@ToString
+public class ImagePO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,17 +52,14 @@ public class AccountItemPO {
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date updateTime;
 
-    @Column(name = "state", nullable = false)
+    @Column(name = "deleted", nullable = false)
+    @Range(min = Constants.EXISTED, max = Constants.DELETED)
     @NotNull
-    private int state;
+    private byte deleted;
 
-    @Column(name = "book_time", nullable = false)
-    @NotNull
-    private Date bookTime;
-
-    @ManyToOne(cascade = CascadeType.ALL, optional = false)
-    @JoinColumn(name = "user_id")
-    @Fetch(FetchMode.JOIN)
-    private UserPO belongUser;
+    @Column(name = "uri", nullable = false, length = 1024)
+    @Size(min = 1, max = 1024)
+    @NotBlank
+    private String uri;
 
 }
