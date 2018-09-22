@@ -5,6 +5,8 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,15 +31,15 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import com.corkili.husky.common.State;
+import com.corkili.husky.common.Constants;
 import com.corkili.husky.user.UserPO;
 
 @Entity
 @Table(name = "t_email")
-@SQLDelete(sql = "update t_email set state = " + State.DELETED + " where id = ?")
-@SQLDeleteAll(sql = "update t_email set state = " + State.DELETED + " where id = ?")
-@Where(clause = "state != " + State.DELETED)
-@WhereJoinTable(clause = "state != " + State.DELETED)
+@SQLDelete(sql = "update t_email set deleted = " + Constants.DELETED + " where id = ?")
+@SQLDeleteAll(sql = "update t_email set deleted = " + Constants.DELETED + " where id = ?")
+@Where(clause = "deleted != " + Constants.DELETED)
+@WhereJoinTable(clause = "deleted != " + Constants.DELETED)
 @Getter
 @Setter
 @ToString
@@ -58,22 +60,28 @@ public class EmailPO {
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date updateTime;
 
-    @Column(name = "state", nullable = false)
-    @Range(min = State.INIT, max = State.DELETED)
+    @Column(name = "deleted", nullable = false)
+    @Range(min = Constants.EXISTED, max = Constants.DELETED)
     @NotNull
-    private int state;
+    private byte deleted;
 
     @Column(name = "email_address", nullable = false)
     @javax.validation.constraints.Email
     @NotBlank
     private String emailAddress;
 
+
+    @Column(name = "state", nullable = false, length = 32)
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private EmailState state;
+
     @Column(name = "auth_code", nullable = false, length = 128)
     @Size(max = 128)
     @NotNull
     private String authCode;
 
-    @Column(name = "accessible", nullable = false)
+    @Column(name = "is_accessible", nullable = false)
     private boolean accessible;
 
     @ManyToOne(cascade = CascadeType.ALL, optional = false)

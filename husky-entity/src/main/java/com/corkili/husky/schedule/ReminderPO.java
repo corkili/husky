@@ -1,4 +1,4 @@
-package com.corkili.husky.finance;
+package com.corkili.husky.schedule;
 
 import java.util.Date;
 
@@ -15,9 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -32,18 +30,18 @@ import lombok.Setter;
 import lombok.ToString;
 
 import com.corkili.husky.common.Constants;
-import com.corkili.husky.user.UserPO;
+import com.corkili.husky.email.EmailPO;
 
 @Entity
-@Table(name = "t_transaction_item")
-@SQLDelete(sql = "update t_transaction_item set deleted = " + Constants.DELETED + " where id = ?")
-@SQLDeleteAll(sql = "update t_transaction_item set deleted = " + Constants.DELETED + " where id = ?")
+@Table(name = "t_reminder")
+@SQLDelete(sql = "update t_reminder set deleted = " + Constants.DELETED + " where id = ?")
+@SQLDeleteAll(sql = "update t_reminder set deleted = " + Constants.DELETED + " where id = ?")
 @Where(clause = "deleted != " + Constants.DELETED)
 @WhereJoinTable(clause = "deleted != " + Constants.DELETED)
 @Getter
 @Setter
 @ToString
-public class TransactionItemPO {
+public class ReminderPO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,34 +63,23 @@ public class TransactionItemPO {
     @NotNull
     private byte deleted;
 
-    @Column(name = "book_time", nullable = false)
-    @Temporal(value = TemporalType.TIMESTAMP)
+    @Column(name = "reminder_time", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     @NotNull
-    private Date bookTime;
+    private Date reminderTime;
 
-    @Column(name = "transaction_type", nullable = false)
+    @Column(name = "reminder_type", nullable = false, length = 32)
     @Enumerated(EnumType.STRING)
-    @NotNull
-    private TransactionType transactionType;
-
-    @Column(name = "money", nullable = false, scale = 3)
-    @NotNull
-    private Double money;
-
-    @Column(name = "summary", nullable = false, length = 64)
-    @Size(min = 1, max = 64)
-    @NotBlank
-    private String summary;
-
-    @Column(name = "describes", nullable = false, length = 1024)
-    @Size(min = 1, max = 1024)
-    @NotBlank
-    private String describes;
+    private ReminderType reminderType;
 
     @ManyToOne(cascade = CascadeType.ALL, optional = false)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "email_id")
     @Fetch(FetchMode.JOIN)
-    @NotNull
-    private UserPO belongUser;
+    private EmailPO reminderEmail;
 
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @JoinColumn(name = "schedule_id")
+    @Fetch(FetchMode.JOIN)
+    private SchedulePO belongSchedule;
+    
 }

@@ -24,14 +24,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import com.corkili.husky.common.State;
+import com.corkili.husky.common.Constants;
 
 @Entity
 @Table(name = "t_user")
-@SQLDelete(sql = "update t_user set state = " + State.DELETED + " where id = ?")
-@SQLDeleteAll(sql = "update t_user set state = " + State.DELETED + " where id = ?")
-@Where(clause = "state != " + State.DELETED)
-@WhereJoinTable(clause = "state != " + State.DELETED)
+@SQLDelete(sql = "update t_user set deleted = " + Constants.DELETED + " where id = ?")
+@SQLDeleteAll(sql = "update t_user set deleted = " + Constants.DELETED + " where id = ?")
+@Where(clause = "deleted != " + Constants.DELETED)
+@WhereJoinTable(clause = "deleted != " + Constants.DELETED)
 @Getter
 @Setter
 @ToString
@@ -52,10 +52,10 @@ public class UserPO {
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date updateTime;
 
-    @Column(name = "state", nullable = false)
-    @Range(min = State.INIT, max = State.DELETED)
+    @Column(name = "deleted", nullable = false)
+    @Range(min = Constants.EXISTED, max = Constants.DELETED)
     @NotNull
-    private int state;
+    private byte deleted;
 
     @Column(name = "username", unique = true, nullable = false, length = 50)
     @NotBlank
@@ -66,5 +66,10 @@ public class UserPO {
     @NotBlank
     @Size(min = 6, max = 128)
     private String password;
+
+    @Column(name = "nickname", nullable = false, length = 50)
+    @NotBlank
+    @Size(min = 1, max = 50)
+    private String nickname;
 
 }

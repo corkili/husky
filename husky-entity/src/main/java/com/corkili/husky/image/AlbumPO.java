@@ -1,17 +1,19 @@
-package com.corkili.husky.finance;
+package com.corkili.husky.image;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -35,15 +37,15 @@ import com.corkili.husky.common.Constants;
 import com.corkili.husky.user.UserPO;
 
 @Entity
-@Table(name = "t_transaction_item")
-@SQLDelete(sql = "update t_transaction_item set deleted = " + Constants.DELETED + " where id = ?")
-@SQLDeleteAll(sql = "update t_transaction_item set deleted = " + Constants.DELETED + " where id = ?")
+@Table(name = "t_album")
+@SQLDelete(sql = "update t_album set deleted = " + Constants.DELETED + " where id = ?")
+@SQLDeleteAll(sql = "update t_album set deleted = " + Constants.DELETED + " where id = ?")
 @Where(clause = "deleted != " + Constants.DELETED)
 @WhereJoinTable(clause = "deleted != " + Constants.DELETED)
 @Getter
 @Setter
 @ToString
-public class TransactionItemPO {
+public class AlbumPO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,34 +67,30 @@ public class TransactionItemPO {
     @NotNull
     private byte deleted;
 
-    @Column(name = "book_time", nullable = false)
-    @Temporal(value = TemporalType.TIMESTAMP)
-    @NotNull
-    private Date bookTime;
-
-    @Column(name = "transaction_type", nullable = false)
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    private TransactionType transactionType;
-
-    @Column(name = "money", nullable = false, scale = 3)
-    @NotNull
-    private Double money;
-
-    @Column(name = "summary", nullable = false, length = 64)
+    @Column(name = "title", nullable = false, length = 64)
     @Size(min = 1, max = 64)
     @NotBlank
-    private String summary;
+    private String title;
 
     @Column(name = "describes", nullable = false, length = 1024)
     @Size(min = 1, max = 1024)
     @NotBlank
     private String describes;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN)
+    @JoinColumn(name = "album_id", nullable = false)
+    @NotNull
+    private List<ImagePO> images;
+
     @ManyToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "user_id")
     @Fetch(FetchMode.JOIN)
     @NotNull
     private UserPO belongUser;
+
+    public AlbumPO() {
+        images = new ArrayList<>();
+    }
 
 }

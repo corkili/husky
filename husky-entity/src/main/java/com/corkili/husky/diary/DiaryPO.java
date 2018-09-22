@@ -29,15 +29,15 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import com.corkili.husky.common.State;
+import com.corkili.husky.common.Constants;
 import com.corkili.husky.user.UserPO;
 
 @Entity
 @Table(name = "t_diary")
-@SQLDelete(sql = "update t_diary set state = " + State.DELETED + " where id = ?")
-@SQLDeleteAll(sql = "update t_diary set state = " + State.DELETED + " where id = ?")
-@Where(clause = "state != " + State.DELETED)
-@WhereJoinTable(clause = "state != " + State.DELETED)
+@SQLDelete(sql = "update t_diary set deleted = " + Constants.DELETED + " where id = ?")
+@SQLDeleteAll(sql = "update t_diary set deleted = " + Constants.DELETED + " where id = ?")
+@Where(clause = "deleted != " + Constants.DELETED)
+@WhereJoinTable(clause = "deleted != " + Constants.DELETED)
 @Getter
 @Setter
 @ToString
@@ -58,10 +58,10 @@ public class DiaryPO {
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date updateTime;
 
-    @Column(name = "state", nullable = false)
-    @Range(min = State.INIT, max = State.DELETED)
+    @Column(name = "deleted", nullable = false)
+    @Range(min = Constants.EXISTED, max = Constants.DELETED)
     @NotNull
-    private int state;
+    private byte deleted;
 
     @ManyToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "user_id")
