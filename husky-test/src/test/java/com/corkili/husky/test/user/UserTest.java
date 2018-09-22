@@ -22,7 +22,7 @@ public class UserTest extends HuskyTest {
         userPO.setPassword("passkey");
         userPO.setCreateTime(new Date());
         userPO.setUpdateTime(new Date());
-        userPO.setState(Constants.EXISTED);
+        userPO.setDeleted(Constants.EXISTED);
         userPO = userRepository.save(userPO);
         System.out.println(userPO);
     }
