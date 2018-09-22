@@ -5,13 +5,15 @@ import java.util.Objects;
 public final class Result<Extra> {
 
     private final boolean success;
+    private final int code;
     private final String message;
     private final Extra extra;
     private final long createTimestamp;
 
-    public Result(boolean success, String message, Extra extra) {
+    public Result(boolean success, int code, String message, Extra extra) {
         this.createTimestamp = System.currentTimeMillis();
         this.success = success;
+        this.code = code;
         this.message = message == null ? "" : message;
         this.extra = extra;
     }
@@ -19,6 +21,7 @@ public final class Result<Extra> {
     public Result(Result<Extra> result) {
         this.createTimestamp = System.currentTimeMillis();
         this.success = result.success;
+        this.code = 0;
         this.message = result.message == null ? "" : result.message;
         this.extra = result.extra;
     }
