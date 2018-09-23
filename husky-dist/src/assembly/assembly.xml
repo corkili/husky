@@ -56,6 +56,10 @@
             <outputDirectory>/lib</outputDirectory>
             <destName>husky-entity-${project.version}.jar</destName>
         </file>
-
+        <file>
+            <source>${project.basedir}/../husky-fs/target/husky-fs-${project.version}.jar</source>
+            <outputDirectory>/lib</outputDirectory>
+            <destName>husky-fs-${project.version}.jar</destName>
+        </file>
     </files>
 </assembly>
