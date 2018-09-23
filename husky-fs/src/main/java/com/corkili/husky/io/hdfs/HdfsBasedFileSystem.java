@@ -3,46 +3,56 @@ package com.corkili.husky.io.hdfs;
 import java.io.File;
 import java.util.List;
 
-import com.corkili.husky.common.Result;
 import com.corkili.husky.exception.AppIOException;
 import com.corkili.husky.fs.AppFileSystem;
+import com.corkili.husky.fs.AppPath;
 import com.corkili.husky.fs.FileType;
 
 public class HdfsBasedFileSystem implements AppFileSystem {
 
+
     @Override
-    public FileType typeOf(String path) throws AppIOException {
+    public FileType typeOf(AppPath path) throws AppIOException {
         return null;
     }
 
     @Override
-    public List<File> listFiles(String path, boolean recursion) throws AppIOException {
+    public List<File> listFiles(AppPath path, boolean recursion) throws AppIOException {
         return null;
     }
 
     @Override
-    public File getFile(String path) throws AppIOException {
+    public File getFile(AppPath path) throws AppIOException {
         return null;
     }
 
     @Override
-    public Result<Void> saveFile(String path, File file) throws AppIOException {
+    public File createFile(AppPath path) throws AppIOException {
         return null;
     }
 
     @Override
-    public Result<File> deleteFile(String path) throws AppIOException {
+    public File createDirectory(AppPath path) throws AppIOException {
         return null;
     }
 
     @Override
-    public Result<Void> copyFile(String srcPath, String desPath, boolean recursion) throws AppIOException {
-        return null;
+    public boolean saveFile(AppPath path, File file) throws AppIOException {
+        return false;
     }
 
     @Override
-    public Result<Void> moveFile(String srcPath, String desPath, boolean recursion) throws AppIOException {
-        return null;
+    public boolean deleteFile(AppPath path) throws AppIOException {
+        return false;
     }
 
+    @Override
+    public boolean copyFile(AppPath srcPath, AppPath desPath, boolean recursion) throws AppIOException {
+        return false;
+    }
+
+    @Override
+    public boolean moveFile(AppPath srcPath, AppPath desPath, boolean recursion) throws AppIOException {
+        return false;
+    }
 }

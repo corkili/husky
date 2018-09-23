@@ -1,6 +1,8 @@
 package com.corkili.husky.io.file;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -9,11 +11,12 @@ import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
 
-import com.corkili.husky.common.Result;
 import com.corkili.husky.config.Config;
 import com.corkili.husky.config.ConfigManager;
 import com.corkili.husky.exception.AppIOException;
 import com.corkili.husky.fs.AppFileSystem;
+import com.corkili.husky.fs.AppPath;
+import com.corkili.husky.fs.AppPaths;
 import com.corkili.husky.fs.FileType;
 import com.corkili.husky.util.IUtils;
 
@@ -40,101 +43,157 @@ public class FileBasedAppFileSystem implements AppFileSystem {
     }
 
     @Override
-    public FileType typeOf(String path) throws AppIOException {
-        String nPath = normalizePath(path);
-        File file = getFile(nPath);
-        checkFileExists(file, nPath);
+    public FileType typeOf(AppPath path) throws AppIOException {
+        normalizePath(path);
+        File file = getFile(path);
+        assertFileExists(file, path.getPath());
         if (file.isFile()) {
             return FileType.FILE;
         } else if (file.isDirectory()){
             return FileType.DIRECTORY;
         } else {
-            throw new AppIOException(IUtils.format("File's type \"{}\" not defined", nPath));
+            throw new AppIOException(IUtils.format("file's type \"{}\" not defined", path));
         }
     }
 
     @Override
-    public List<File> listFiles(String path, boolean recursion) throws AppIOException {
-        String nPath = normalizePath(path);
+    public List<File> listFiles(AppPath path, boolean recursion) throws AppIOException {
+        normalizePath(path);
         File file = getFile(path);
-        checkFileExists(file, nPath);
+        assertFileExists(file, path.getPath());
         if (!file.isDirectory()) {
-            throw new AppIOException(IUtils.format("\"{}\" is not a directory", nPath));
+            throw new AppIOException(IUtils.format("\"{}\" is not a directory", path));
         }
-        Set<File> fileSet = new HashSet<>();
-        listFiles(file, fileSet);
-        return new ArrayList<>(fileSet);
+        List<File> files = new ArrayList<>();
+        if (recursion) {
+            Set<File> fileSet = new HashSet<>();
+            listFilesRecursion(file, fileSet);
+            files.addAll(fileSet);
+        } else {
+            File[] allFile = file.listFiles();
+            if (allFile != null) {
+                Collections.addAll(files, allFile);
+            }
+        }
+        return files;
     }
 
     @Override
-    public File getFile(String path) throws AppIOException {
-        String nPath = normalizePath(path);
-        File file = new File(nPath);
-        checkFileExists(file, nPath);
+    public File getFile(AppPath path) throws AppIOException {
+        normalizePath(path);
+        File file = new File(path.getPath());
+        assertFileExists(file, path.getPath());
         return file;
     }
 
     @Override
-    public Result<Void> saveFile(String path, File file) throws AppIOException {
-        return null;
+    public File createFile(AppPath path) throws AppIOException {
+        normalizePath(path);
+        File file = getFile(path);
+        assertNotFileExists(file, path.getPath());
+        boolean failed;
+        try {
+            failed = file.createNewFile();
+        } catch (IOException e) {
+            throw new AppIOException(IUtils.format("create file \"{}\" exception - ", path.getPath()), e);
+        }
+        if (failed) {
+            throw new AppIOException(IUtils.format("create file \"{}\" failed - ", path.getPath()));
+        }
+        return file;
     }
 
     @Override
-    public Result<File> deleteFile(String path) throws AppIOException {
-        return null;
+    public File createDirectory(AppPath path) throws AppIOException {
+        normalizePath(path);
+        File file = getFile(path);
+        assertNotFileExists(file, path.getPath());
+        if (!file.mkdirs()) {
+            throw new AppIOException(IUtils.format("create directory \"{}\" failed - ", path.getPath()));
+        }
+        return file;
     }
 
     @Override
-    public Result<Void> copyFile(String srcPath, String desPath, boolean recursion) throws AppIOException {
-        return null;
+    public boolean saveFile(AppPath path, File file) throws AppIOException {
+        normalizePath(path);
+        assertFileExists(file, file.getAbsolutePath());
+        return copyFile(new AppPath(file.getAbsolutePath()).normalized(), path, false);
     }
 
     @Override
-    public Result<Void> moveFile(String srcPath, String desPath, boolean recursion) throws AppIOException {
-        return null;
+    public boolean deleteFile(AppPath path) throws AppIOException {
+        normalizePath(path);
+        File file = getFile(path);
+        assertFileExists(file, path.getPath());
+        return file.delete();
     }
 
-    private String normalizePath(String path) throws AppIOException {
-        if (path == null) {
-            throw new AppIOException("Path is null");
+    @Override
+    public boolean copyFile(AppPath srcPath, AppPath desPath, boolean recursion) throws AppIOException {
+        normalizePath(srcPath);
+        normalizePath(desPath);
+        File srcFile = getFile(srcPath);
+        File desFile = getFile(desPath);
+        assertFileExists(srcFile, srcPath.getPath());
+        assertNotFileExists(desFile, desPath.getPath());
+        if (!recursion && srcFile.isDirectory()) {
+            return false;
         }
-        if (path.startsWith(rootPath)) {
-            return path;
+        try {
+            Files.copy(srcFile.toPath(), desFile.toPath());
+        } catch (IOException e) {
+            throw new AppIOException(IUtils.format("copy file \"{}\" to \"{}\" failed - ",
+                    srcPath.getPath(), desPath.getPath()), e);
         }
-        if (isSeparatorFsEqualApp) {
-            return normalizePath(path, fsPathSeparator);
-        } else {
-            return normalizePath(path, fsPathSeparator, appPathSeparator);
-        }
+        return true;
     }
 
-    private String normalizePath(String path, String fsSeparator, String appSeparator) {
-        return normalizePath(path.replaceAll(appSeparator, fsSeparator), fsSeparator);
+    @Override
+    public boolean moveFile(AppPath srcPath, AppPath desPath, boolean recursion) throws AppIOException {
+        normalizePath(srcPath);
+        normalizePath(desPath);
+        File srcFile = getFile(srcPath);
+        File desFile = getFile(desPath);
+        assertFileExists(srcFile, srcPath.getPath());
+        assertNotFileExists(desFile, desPath.getPath());
+        if (!recursion && srcFile.isDirectory()) {
+            return false;
+        }
+        try {
+            Files.move(srcFile.toPath(), desFile.toPath());
+        } catch (IOException e) {
+            throw new AppIOException(IUtils.format("move file \"{}\" to \"{}\" failed - ",
+                    srcPath.getPath(), desPath.getPath()), e);
+        }
+        return true;
     }
 
-    private String normalizePath(String path, String separator) {
-        String resPath = rootPath;
-        if (!path.startsWith(separator)) {
-            resPath += separator;
-        }
-        resPath += path;
-        if (resPath.endsWith(separator)) {
-            resPath = resPath.substring(0, resPath.length() - 1);
-        }
-        return resPath;
+    private void normalizePath(AppPath path) throws AppIOException {
+        AppPaths.normalizePath(path, isSeparatorFsEqualApp, rootPath, fsPathSeparator, appPathSeparator);
+    }
+
+    private boolean isFileExists(File file) {
+        return !isFileNotExists(file);
     }
 
     private boolean isFileNotExists(File file) {
         return file == null || !file.exists();
     }
 
-    private void checkFileExists(File file, String path) throws AppIOException {
+    private void assertFileExists(File file, String path) throws AppIOException {
         if (isFileNotExists(file)) {
-            throw new AppIOException(IUtils.format("File \"{}\" not found", path));
+            throw new AppIOException(IUtils.format("file \"{}\" not found", path));
         }
     }
 
-    private void listFiles(File file, Set<File> fileSet) {
+    private void assertNotFileExists(File file, String path) throws AppIOException {
+        if (isFileExists(file)) {
+            throw new AppIOException(IUtils.format("file \"{}\" already exist", path));
+        }
+    }
+
+    private void listFilesRecursion(File file, Set<File> fileSet) {
         if (isFileNotExists(file)) {
             return;
         }
@@ -145,7 +204,7 @@ public class FileBasedAppFileSystem implements AppFileSystem {
         Collections.addAll(fileSet, files);
         for (File childFile : files) {
             if (childFile.isDirectory()) {
-                listFiles(childFile, fileSet);
+                listFilesRecursion(childFile, fileSet);
             }
         }
     }
