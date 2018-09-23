@@ -38,8 +38,8 @@ import com.corkili.husky.user.UserPO;
 @Table(name = "t_email")
 @SQLDelete(sql = "update t_email set deleted = " + Constants.DELETED + " where id = ?")
 @SQLDeleteAll(sql = "update t_email set deleted = " + Constants.DELETED + " where id = ?")
-@Where(clause = "deleted != " + Constants.DELETED)
-@WhereJoinTable(clause = "deleted != " + Constants.DELETED)
+@Where(clause = "deleted = " + Constants.EXISTED)
+@WhereJoinTable(clause = "deleted = " + Constants.EXISTED)
 @Getter
 @Setter
 @ToString
