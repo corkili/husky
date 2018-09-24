@@ -60,7 +60,6 @@ public class DiaryPO {
 
     @Column(name = "deleted", nullable = false)
     @Range(min = Constants.EXISTED, max = Constants.DELETED)
-    @NotNull
     private byte deleted;
 
     @ManyToOne(cascade = CascadeType.ALL, optional = false)

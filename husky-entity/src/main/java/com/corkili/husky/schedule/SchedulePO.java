@@ -63,7 +63,6 @@ public class SchedulePO {
 
     @Column(name = "deleted", nullable = false)
     @Range(min = Constants.EXISTED, max = Constants.DELETED)
-    @NotNull
     private byte deleted;
 
     @Column(name = "start_time", nullable = false)

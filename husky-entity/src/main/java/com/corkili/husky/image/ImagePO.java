@@ -11,7 +11,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.SQLDelete;
@@ -54,7 +53,6 @@ public class ImagePO {
 
     @Column(name = "deleted", nullable = false)
     @Range(min = Constants.EXISTED, max = Constants.DELETED)
-    @NotNull
     private byte deleted;
 
     @Column(name = "uri", nullable = false, length = 1024)
