@@ -1,6 +1,4 @@
-package com.corkili.husky.common;
-
-import com.corkili.husky.fs.FileSystemType;
+package com.corkili.husky.fs;
 
 public abstract class AppFSConstants {
 

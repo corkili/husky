@@ -10,6 +10,9 @@ import com.corkili.husky.fs.FileType;
 
 public class HdfsBasedFileSystem implements AppFileSystem {
 
+    private HdfsBasedFileSystem() {
+
+    }
 
     @Override
     public FileType typeOf(AppPath path) throws AppIOException {
@@ -17,12 +20,17 @@ public class HdfsBasedFileSystem implements AppFileSystem {
     }
 
     @Override
-    public List<File> listFiles(AppPath path, boolean recursion) throws AppIOException {
+    public List<File> listFiles(AppPath path, boolean recursive) throws AppIOException {
         return null;
     }
 
     @Override
     public File getFile(AppPath path) throws AppIOException {
+        return null;
+    }
+
+    @Override
+    public File getExistFile(AppPath path) throws AppIOException {
         return null;
     }
 
@@ -37,22 +45,22 @@ public class HdfsBasedFileSystem implements AppFileSystem {
     }
 
     @Override
-    public boolean saveFile(AppPath path, File file) throws AppIOException {
+    public boolean saveFile(AppPath path, File file, boolean recursive) throws AppIOException {
         return false;
     }
 
     @Override
-    public boolean deleteFile(AppPath path) throws AppIOException {
+    public boolean deleteFile(AppPath path, boolean recursive) throws AppIOException {
         return false;
     }
 
     @Override
-    public boolean copyFile(AppPath srcPath, AppPath desPath, boolean recursion) throws AppIOException {
+    public boolean copyFile(AppPath srcPath, AppPath desPath, boolean recursive) throws AppIOException {
         return false;
     }
 
     @Override
-    public boolean moveFile(AppPath srcPath, AppPath desPath, boolean recursion) throws AppIOException {
+    public boolean moveFile(AppPath srcPath, AppPath desPath, boolean recursive) throws AppIOException {
         return false;
     }
 }
