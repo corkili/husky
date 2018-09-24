@@ -58,7 +58,7 @@ public class FileBasedAppFileSystem implements AppFileSystem {
     }
 
     @Override
-    public List<File> listFiles(AppPath path, boolean recursion) throws AppIOException {
+    public List<File> listFiles(AppPath path, boolean recursive) throws AppIOException {
         normalizePath(path);
         File file = getFile(path);
         assertFileExists(file, path.getPath());
@@ -66,7 +66,7 @@ public class FileBasedAppFileSystem implements AppFileSystem {
             throw new AppIOException(IUtils.format("\"{}\" is not a directory", path));
         }
         List<File> files = new ArrayList<>();
-        if (recursion) {
+        if (recursive) {
             Set<File> fileSet = new HashSet<>();
             listFilesRecursion(file, fileSet);
             files.addAll(fileSet);
@@ -122,18 +122,18 @@ public class FileBasedAppFileSystem implements AppFileSystem {
     }
 
     @Override
-    public boolean saveFile(AppPath path, File file, boolean recursion) throws AppIOException {
+    public boolean saveFile(AppPath path, File file, boolean recursive) throws AppIOException {
         normalizePath(path);
         assertFileExists(file, file.getAbsolutePath());
-        return copyFile(new AppPath(file.getAbsolutePath()).normalized(), path, recursion);
+        return copyFile(new AppPath(file.getAbsolutePath()).normalized(), path, recursive);
     }
 
     @Override
-    public boolean deleteFile(AppPath path, boolean recursion) throws AppIOException {
+    public boolean deleteFile(AppPath path, boolean recursive) throws AppIOException {
         normalizePath(path);
         File file = getFile(path);
         assertFileExists(file, path.getPath());
-        if (file.isDirectory() && recursion) {
+        if (file.isDirectory() && recursive) {
             return deleteFileRecursion(file);
         } else {
             return file.delete();
@@ -141,16 +141,16 @@ public class FileBasedAppFileSystem implements AppFileSystem {
     }
 
     @Override
-    public boolean copyFile(AppPath srcPath, AppPath desPath, boolean recursion) throws AppIOException {
+    public boolean copyFile(AppPath srcPath, AppPath desPath, boolean recursive) throws AppIOException {
         normalizePath(srcPath);
         normalizePath(desPath);
         File srcFile = getFile(srcPath);
         File desFile = getFile(desPath);
         assertFileExists(srcFile, srcPath.getPath());
         assertNotFileExists(desFile, desPath.getPath());
-        if (srcFile.isDirectory() && recursion) {
+        if (srcFile.isDirectory() && recursive) {
             copyFileRecursion(srcFile, desFile);
-        } else if (srcFile.isDirectory() && !recursion) {
+        } else if (srcFile.isDirectory() && !recursive) {
             return false;
         } else {
             copyFile(srcFile, desFile);
@@ -159,11 +159,11 @@ public class FileBasedAppFileSystem implements AppFileSystem {
     }
 
     @Override
-    public boolean moveFile(AppPath srcPath, AppPath desPath, boolean recursion) throws AppIOException {
+    public boolean moveFile(AppPath srcPath, AppPath desPath, boolean recursive) throws AppIOException {
         normalizePath(srcPath);
         normalizePath(desPath);
         try {
-            return copyFile(srcPath, desPath, recursion) && deleteFile(srcPath, recursion);
+            return copyFile(srcPath, desPath, recursive) && deleteFile(srcPath, recursive);
         } catch (AppIOException e) {
             throw new AppIOException(IUtils.format("move file \"{}\" to \"{}\" failed - ",
                     srcPath.getPath(), desPath.getPath()), e);

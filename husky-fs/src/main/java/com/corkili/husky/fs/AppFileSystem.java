@@ -10,7 +10,7 @@ public interface AppFileSystem {
 
     FileType typeOf(AppPath path) throws AppIOException;
 
-    List<File> listFiles(AppPath path, boolean recursion) throws AppIOException;
+    List<File> listFiles(AppPath path, boolean recursive) throws AppIOException;
 
     File getFile(AppPath path) throws AppIOException;
 
@@ -20,13 +20,13 @@ public interface AppFileSystem {
 
     File createDirectory(AppPath path) throws AppIOException;
 
-    boolean saveFile(AppPath path, File file, boolean recursion) throws AppIOException;
+    boolean saveFile(AppPath path, File file, boolean recursive) throws AppIOException;
 
-    boolean deleteFile(AppPath path, boolean recursion) throws AppIOException;
+    boolean deleteFile(AppPath path, boolean recursive) throws AppIOException;
 
-    boolean copyFile(AppPath srcPath, AppPath desPath, boolean recursion) throws AppIOException;
+    boolean copyFile(AppPath srcPath, AppPath desPath, boolean recursive) throws AppIOException;
 
-    boolean moveFile(AppPath srcPath, AppPath desPath, boolean recursion) throws AppIOException;
+    boolean moveFile(AppPath srcPath, AppPath desPath, boolean recursive) throws AppIOException;
 
     // default method
 
@@ -43,10 +43,10 @@ public interface AppFileSystem {
         return listFiles(false, paths);
     }
 
-    default List<File> listFiles(boolean recursion, AppPath... paths) throws AppIOException {
+    default List<File> listFiles(boolean recursive, AppPath... paths) throws AppIOException {
         List<File> files = new ArrayList<>();
         for (AppPath path : paths) {
-            files.addAll(listFiles(path, recursion));
+            files.addAll(listFiles(path, recursive));
         }
         return files;
     }
