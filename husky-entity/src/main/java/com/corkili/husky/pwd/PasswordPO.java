@@ -1,12 +1,10 @@
-package com.corkili.husky.email;
+package com.corkili.husky.pwd;
 
 import java.util.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -35,15 +33,15 @@ import com.corkili.husky.common.Constants;
 import com.corkili.husky.user.UserPO;
 
 @Entity
-@Table(name = "t_email")
-@SQLDelete(sql = "update t_email set deleted = " + Constants.DELETED + " where id = ?")
-@SQLDeleteAll(sql = "update t_email set deleted = " + Constants.DELETED + " where id = ?")
+@Table(name = "t_diary")
+@SQLDelete(sql = "update t_diary set deleted = " + Constants.DELETED + " where id = ?")
+@SQLDeleteAll(sql = "update t_diary set deleted = " + Constants.DELETED + " where id = ?")
 @Where(clause = "deleted = " + Constants.EXISTED)
 @WhereJoinTable(clause = "deleted = " + Constants.EXISTED)
 @Getter
 @Setter
 @ToString
-public class EmailPO {
+public class PasswordPO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,27 +62,49 @@ public class EmailPO {
     @Range(min = Constants.EXISTED, max = Constants.DELETED)
     private byte deleted;
 
-    @Column(name = "email_address", nullable = false)
-    @javax.validation.constraints.Email
+    @Column(name = "accounts", nullable = false, length = 512)
     @NotBlank
-    private String emailAddress;
+    @Size(min = 1, max = 512)
+    private String accounts;
 
+    @Column(name = "summary", nullable = false, length = 512)
+    @NotBlank
+    @Size(min = 1, max = 512)
+    private String summary;
 
-    @Column(name = "state", nullable = false, length = 32)
-    @Enumerated(EnumType.STRING)
+    @Column(name = "password", nullable = false, length = 512)
+    @NotBlank
+    @Size(min = 1, max = 512)
+    private String password;
+
+    @Column(name = "phones", nullable = false, length = 128)
     @NotNull
-    private EmailState state;
-
-    @Column(name = "auth_code", nullable = false, length = 128)
     @Size(max = 128)
-    @NotNull
-    private String authCode;
+    private String phones;
 
-    @Column(name = "is_accessible", nullable = false)
-    private boolean accessible;
+    @Column(name = "emails", nullable = false, length = 512)
+    @NotNull
+    @Size(max = 512)
+    private String emails;
+
+    @Column(name = "qqs", nullable = false, length = 128)
+    @NotNull
+    @Size(max = 128)
+    private String qqs;
+
+    @Column(name = "wechats", nullable = false, length = 128)
+    @NotNull
+    @Size(max = 128)
+    private String wechats;
+
+    @Column(name = "others", nullable = false, length = 1024)
+    @NotNull
+    @Size(max = 1024)
+    private String remark;
 
     @ManyToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "user_id")
     @Fetch(FetchMode.JOIN)
     private UserPO belongUser;
+
 }

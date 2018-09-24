@@ -60,7 +60,6 @@ public class ReminderPO {
 
     @Column(name = "deleted", nullable = false)
     @Range(min = Constants.EXISTED, max = Constants.DELETED)
-    @NotNull
     private byte deleted;
 
     @Column(name = "reminder_time", nullable = false)

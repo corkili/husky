@@ -62,7 +62,6 @@ public class TransactionItemPO {
 
     @Column(name = "deleted", nullable = false)
     @Range(min = Constants.EXISTED, max = Constants.DELETED)
-    @NotNull
     private byte deleted;
 
     @Column(name = "book_time", nullable = false)
