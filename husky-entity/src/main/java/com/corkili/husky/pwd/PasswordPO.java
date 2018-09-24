@@ -33,9 +33,9 @@ import com.corkili.husky.common.Constants;
 import com.corkili.husky.user.UserPO;
 
 @Entity
-@Table(name = "t_diary")
-@SQLDelete(sql = "update t_diary set deleted = " + Constants.DELETED + " where id = ?")
-@SQLDeleteAll(sql = "update t_diary set deleted = " + Constants.DELETED + " where id = ?")
+@Table(name = "t_password")
+@SQLDelete(sql = "update t_password set deleted = " + Constants.DELETED + " where id = ?")
+@SQLDeleteAll(sql = "update t_password set deleted = " + Constants.DELETED + " where id = ?")
 @Where(clause = "deleted = " + Constants.EXISTED)
 @WhereJoinTable(clause = "deleted = " + Constants.EXISTED)
 @Getter
