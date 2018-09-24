@@ -13,6 +13,7 @@ public enum  FileSystemType {
 
     FileSystemType(String protocol, Class<? extends AppFileSystem> implClass) {
         this.protocol = protocol;
+        this.implClass = implClass;
     }
 
     public String getProtocol() {

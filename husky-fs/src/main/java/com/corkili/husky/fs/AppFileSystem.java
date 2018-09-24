@@ -14,13 +14,15 @@ public interface AppFileSystem {
 
     File getFile(AppPath path) throws AppIOException;
 
+    File getExistFile(AppPath path) throws AppIOException;
+
     File createFile(AppPath path) throws AppIOException;
 
     File createDirectory(AppPath path) throws AppIOException;
 
-    boolean saveFile(AppPath path, File file) throws AppIOException;
+    boolean saveFile(AppPath path, File file, boolean recursion) throws AppIOException;
 
-    boolean deleteFile(AppPath path) throws AppIOException;
+    boolean deleteFile(AppPath path, boolean recursion) throws AppIOException;
 
     boolean copyFile(AppPath srcPath, AppPath desPath, boolean recursion) throws AppIOException;
 
@@ -59,6 +61,14 @@ public interface AppFileSystem {
 
     default boolean isEmptyDirectory(AppPath path) throws AppIOException {
         return isDirectory(path) && listFiles(path, false).size() == 0;
+    }
+
+    default boolean saveFile(AppPath path, File file) throws AppIOException {
+        return saveFile(path, file, false);
+    }
+
+    default boolean deleteFile(AppPath path) throws AppIOException {
+        return deleteFile(path, false);
     }
 
     default boolean copyFile(AppPath srcPath, AppPath desPath) throws AppIOException {

@@ -1,8 +1,9 @@
 package com.corkili.husky.fs;
 
+import java.lang.reflect.Constructor;
+
 import lombok.extern.slf4j.Slf4j;
 
-import com.corkili.husky.common.AppFSConstants;
 import com.corkili.husky.config.Config;
 import com.corkili.husky.config.ConfigManager;
 import com.corkili.husky.exception.InitAppFileSystemException;
@@ -27,7 +28,10 @@ public final class AppFileSystems {
                         fileSystemType = FileSystemType.FILE;
                     }
                     try {
-                        appFileSystem = fileSystemType.getImplClass().newInstance();
+                        Constructor constructor = fileSystemType.getImplClass().getDeclaredConstructor();
+                        constructor.setAccessible(true);
+                        appFileSystem = (AppFileSystem) constructor.newInstance();
+                        constructor.setAccessible(false);
                     } catch (Exception e) {
                         log.error(IUtils.format("init appFileSystem failed - {}", IUtils.stringifyError(e)));
                         throw new InitAppFileSystemException("init appFileSystem failed", e);

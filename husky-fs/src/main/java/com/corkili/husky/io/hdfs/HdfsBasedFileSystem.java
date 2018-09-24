@@ -10,6 +10,9 @@ import com.corkili.husky.fs.FileType;
 
 public class HdfsBasedFileSystem implements AppFileSystem {
 
+    private HdfsBasedFileSystem() {
+
+    }
 
     @Override
     public FileType typeOf(AppPath path) throws AppIOException {
@@ -27,6 +30,11 @@ public class HdfsBasedFileSystem implements AppFileSystem {
     }
 
     @Override
+    public File getExistFile(AppPath path) throws AppIOException {
+        return null;
+    }
+
+    @Override
     public File createFile(AppPath path) throws AppIOException {
         return null;
     }
@@ -37,12 +45,12 @@ public class HdfsBasedFileSystem implements AppFileSystem {
     }
 
     @Override
-    public boolean saveFile(AppPath path, File file) throws AppIOException {
+    public boolean saveFile(AppPath path, File file, boolean recursion) throws AppIOException {
         return false;
     }
 
     @Override
-    public boolean deleteFile(AppPath path) throws AppIOException {
+    public boolean deleteFile(AppPath path, boolean recursion) throws AppIOException {
         return false;
     }
 
