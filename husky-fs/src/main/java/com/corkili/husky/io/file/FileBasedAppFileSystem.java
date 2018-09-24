@@ -3,7 +3,6 @@ package com.corkili.husky.io.file;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -73,7 +72,11 @@ public class FileBasedAppFileSystem implements AppFileSystem {
         } else {
             File[] allFile = file.listFiles();
             if (allFile != null) {
-                Collections.addAll(files, allFile);
+                for (File f : allFile) {
+                    if (f.isFile()) {
+                        files.add(f);
+                    }
+                }
             }
         }
         return files;
@@ -202,7 +205,11 @@ public class FileBasedAppFileSystem implements AppFileSystem {
         if (files == null) {
             return;
         }
-        Collections.addAll(fileSet, files);
+        for (File childFile : files) {
+            if (childFile.isFile()) {
+                fileSet.add(childFile);
+            }
+        }
         for (File childFile : files) {
             if (childFile.isDirectory()) {
                 listFilesRecursion(childFile, fileSet);

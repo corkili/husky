@@ -1,8 +1,6 @@
 package com.corkili.husky.exception;
 
-import java.io.IOException;
-
-public class AppIOException extends IOException {
+public class AppIOException extends Exception {
 
     public AppIOException(String message) {
         super(message);
