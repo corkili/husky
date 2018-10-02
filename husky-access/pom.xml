@@ -10,8 +10,8 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>husky-web</artifactId>
-    <name>husky-web</name>
+    <artifactId>husky-access</artifactId>
+    <name>husky-access</name>
     <packaging>jar</packaging>
 
 </project>
