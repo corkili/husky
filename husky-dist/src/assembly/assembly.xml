@@ -27,7 +27,7 @@
     </fileSets>
     <files>
         <file>
-            <source>${project.basedir}/../husky-web/src/main/resources/application.yaml</source>
+            <source>${project.basedir}/../husky-starter/src/main/resources/application.yaml</source>
             <outputDirectory>/conf</outputDirectory>
             <destName>application.yaml</destName>
         </file>
@@ -37,19 +37,9 @@
             <destName>husky-common-${project.version}.jar</destName>
         </file>
         <file>
-            <source>${project.basedir}/../husky-web/target/husky-web-${project.version}.jar</source>
+            <source>${project.basedir}/../husky-fs/target/husky-fs-${project.version}.jar</source>
             <outputDirectory>/lib</outputDirectory>
-            <destName>husky-web-${project.version}.jar</destName>
-        </file>
-        <file>
-            <source>${project.basedir}/../husky-service/target/husky-service-${project.version}.jar</source>
-            <outputDirectory>/lib</outputDirectory>
-            <destName>husky-service-${project.version}.jar</destName>
-        </file>
-        <file>
-            <source>${project.basedir}/../husky-repo/target/husky-repo-${project.version}.jar</source>
-            <outputDirectory>/lib</outputDirectory>
-            <destName>husky-repo-${project.version}.jar</destName>
+            <destName>husky-fs-${project.version}.jar</destName>
         </file>
         <file>
             <source>${project.basedir}/../husky-entity/target/husky-entity-${project.version}.jar</source>
@@ -57,9 +47,29 @@
             <destName>husky-entity-${project.version}.jar</destName>
         </file>
         <file>
-            <source>${project.basedir}/../husky-fs/target/husky-fs-${project.version}.jar</source>
+            <source>${project.basedir}/../husky-repo/target/husky-repo-${project.version}.jar</source>
             <outputDirectory>/lib</outputDirectory>
-            <destName>husky-fs-${project.version}.jar</destName>
+            <destName>husky-repo-${project.version}.jar</destName>
+        </file>
+        <file>
+            <source>${project.basedir}/../husky-service/target/husky-service-${project.version}.jar</source>
+            <outputDirectory>/lib</outputDirectory>
+            <destName>husky-service-${project.version}.jar</destName>
+        </file>
+        <file>
+            <source>${project.basedir}/../husky-access/target/husky-access-${project.version}.jar</source>
+            <outputDirectory>/lib</outputDirectory>
+            <destName>husky-access-${project.version}.jar</destName>
+        </file>
+        <file>
+            <source>${project.basedir}/../husky-web/target/husky-web-${project.version}.jar</source>
+            <outputDirectory>/lib</outputDirectory>
+            <destName>husky-web-${project.version}.jar</destName>
+        </file>
+        <file>
+            <source>${project.basedir}/../husky-starter/target/husky-starter-${project.version}.jar</source>
+            <outputDirectory>/lib</outputDirectory>
+            <destName>husky-starter-${project.version}.jar</destName>
         </file>
     </files>
 </assembly>

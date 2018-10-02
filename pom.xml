@@ -31,7 +31,9 @@
         <module>husky-entity</module>
         <module>husky-repo</module>
         <module>husky-service</module>
+        <module>husky-access</module>
         <module>husky-web</module>
+        <module>husky-starter</module>
         <module>husky-dist</module>
         <module>husky-test</module>
     </modules>
@@ -46,7 +48,17 @@
         <dependencies>
             <dependency>
                 <groupId>com.corkili</groupId>
+                <artifactId>husky-starter</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.corkili</groupId>
                 <artifactId>husky-web</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.corkili</groupId>
+                <artifactId>husky-access</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
@@ -66,12 +78,12 @@
             </dependency>
             <dependency>
                 <groupId>com.corkili</groupId>
-                <artifactId>husky-common</artifactId>
+                <artifactId>husky-fs</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.corkili</groupId>
-                <artifactId>husky-fs</artifactId>
+                <artifactId>husky-common</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
         </dependencies>
